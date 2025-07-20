@@ -56,6 +56,22 @@ public class LogInterceptor extends JavaPlugin implements Listener {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (command.getName().equalsIgnoreCase("fakelog")) {
+            if (sender instanceof ConsoleCommandSender || sender instanceof RemoteConsoleCommandSender) {
+                if (args.length < 1) {
+                    getLogger().info(ChatColor.YELLOW + "用法: fakelog <message>" + ChatColor.RESET);
+                    getLogger().info("调试：" + args.length);
+                    return true;
+                }
+                // Join all arguments into a single message.
+                String message = String.join(" ", args);
+                if ((message.startsWith("\"") && message.endsWith("\"")) || (message.startsWith("'") && message.endsWith("'"))) {
+                    message = message.substring(1, message.length() - 1);
+                }
+                Bukkit.getConsoleSender().sendMessage(message);
+                return true;
+            }
+        }
         if (command.getName().equalsIgnoreCase("chatmsg")) {
             if (!(sender instanceof ConsoleCommandSender) && !(sender instanceof RemoteConsoleCommandSender)) {
                 sender.sendMessage(ChatColor.RED + "该命令只能通过控制台或Rcon执行！" + ChatColor.RESET);
@@ -72,6 +88,9 @@ public class LogInterceptor extends JavaPlugin implements Listener {
             else if (args[0].equalsIgnoreCase("off")) {
                 chatInterceptEnabled = true;
                 sender.sendMessage(ChatColor.GREEN + "客户端聊天拦截功能已开启" + ChatColor.GRAY + "，MCDR插件可开始接管聊天内容，" + ChatColor.RESET + ChatColor.GOLD + "BukkitChatManager需配置禁用兼容模式（compatibility_mode）" + ChatColor.RESET);
+            }
+            else if (args[0].equalsIgnoreCase("version") || args[0].equalsIgnoreCase("ver")) {
+                sender.sendMessage("当前插件版本：" + ChatColor.GREEN + "1.3" + ChatColor.RESET);
             }
             else {
                 getLogger().info(ChatColor.YELLOW + "正确用法: 在控制台执行chatmsg on|off" + ChatColor.RESET);

@@ -9,3 +9,6 @@ commands:
   chatmsg:
     description: 切换聊天日志拦截
     usage: /chatmsg {on|off}
+  fakelog:
+    description: 模拟服务端日志
+    usage: /fakelog <info_message>
